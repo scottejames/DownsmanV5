@@ -20,7 +20,27 @@ public class TeamModel extends Model{
     private List<SupportModel> supportTeam = null;
     private String emergencyContactName = null;
     private String emergencyContactMobile = null;
-    private String getEmergencyContactLandline = null;
+
+    public String getEmergencyContactLandline() {
+        return emergencyContactLandline;
+    }
+
+    public void setEmergencyContactLandline(String emergencyContactLandline) {
+        this.emergencyContactLandline = emergencyContactLandline;
+    }
+
+    private String emergencyContactLandline = null;
+
+    public String getEmergencyContactEmail() {
+        return emergencyContactEmail;
+    }
+
+    public void setEmergencyContactEmail(String emergencyContactEmail) {
+        this.emergencyContactEmail = emergencyContactEmail;
+    }
+
+    private String emergencyContactEmail = null;
+
 
     public TeamModel(String teamName, String hikeClass, String status) {
         this.teamName = teamName;
@@ -28,7 +48,7 @@ public class TeamModel extends Model{
         this.status = status;
     }
 
-    public TeamModel(String teamName, String hikeClass, String status, String section, String district, String county, String prefStart, List<ScoutModel> scoutTeam, String activeMobile, String backupMobile, List<SupportModel> supportTeam, String emergencyContactName, String emergencyContactMobile, String getEmergencyContactLandline) {
+    public TeamModel(String teamName, String hikeClass, String status, String section, String district, String county, String prefStart, List<ScoutModel> scoutTeam, String activeMobile, String backupMobile, List<SupportModel> supportTeam, String emergencyContactName, String emergencyContactMobile, String emergencyContactLandline) {
         this.teamName = teamName;
         this.hikeClass = hikeClass;
         this.status = status;
@@ -42,7 +62,7 @@ public class TeamModel extends Model{
         this.supportTeam = supportTeam;
         this.emergencyContactName = emergencyContactName;
         this.emergencyContactMobile = emergencyContactMobile;
-        this.getEmergencyContactLandline = getEmergencyContactLandline;
+        this.emergencyContactLandline = emergencyContactLandline;
     }
 
     public String getSection() {
@@ -124,17 +144,6 @@ public class TeamModel extends Model{
     public void setEmergencyContactMobile(String emergencyContactMobile) {
         this.emergencyContactMobile = emergencyContactMobile;
     }
-
-    public String getGetEmergencyContactLandline() {
-        return getEmergencyContactLandline;
-    }
-
-    public void setGetEmergencyContactLandline(String getEmergencyContactLandline) {
-        this.getEmergencyContactLandline = getEmergencyContactLandline;
-    }
-
-
-
     public String getTeamName() {
         return teamName;
     }

@@ -12,6 +12,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.Route;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class TeamDetailsView extends VerticalLayout {
 
     private TeamService service = ServiceManager.getInstance().getTeamService();
     private TeamModel model = null;
+    Binder<TeamModel> binder = new Binder<>(TeamModel.class);
 
     private Grid<ScoutModel>    teamMembers = new Grid<>();
     private Grid<SupportModel>  supportMembers = new Grid<>();
@@ -38,14 +41,16 @@ public class TeamDetailsView extends VerticalLayout {
 
 
     public void addTextField(FormLayout form,String label){
-      addTextField(form, label,"");
+      addTextField(form, label,null);
 
     }
-    public void addTextField(FormLayout form, String label, String defaultValue){
+    public void addTextField(FormLayout form, String label, String bindValue){
 
         TextField teamName = new TextField();
-        teamName.setValue(defaultValue);
         form.addFormItem(teamName,label);
+        if (bindValue != null)
+            binder.bind(teamName,bindValue);
+
 
     }
 
@@ -84,6 +89,15 @@ public class TeamDetailsView extends VerticalLayout {
     }
     private void saveForm(){
         System.out.println("SAVE FORM:");
+        try {
+            binder.writeBean(model);
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        }
+        service.update(model);
+        this.getUI().ifPresent(ui -> ui.navigate("TeamView"));
+
+
 
     }
     private void cancelForm(){
@@ -106,12 +120,12 @@ public class TeamDetailsView extends VerticalLayout {
         setupScoutGrid();
         setupSupportGrid();
 
-        addTextField(teamDetailsForm,"Team Name", "Hatters");
-        addTextField(teamDetailsForm,"Section","MidSussex");
-        addTextField(teamDetailsForm,"District");
-        addTextField(teamDetailsForm,"County");
-        addTextField(teamDetailsForm,"Start Time");
-        addTextField(teamDetailsForm,"Hike Class");
+        addTextField(teamDetailsForm,"Team Name", "teamName");
+        addTextField(teamDetailsForm,"Section", "section");
+        addTextField(teamDetailsForm,"District", "district");
+        addTextField(teamDetailsForm,"County", "county");
+        addTextField(teamDetailsForm,"Start Time","prefStart");
+        addTextField(teamDetailsForm,"Hike Class", "hikeClass");
         add(teamDetailsForm);
 
         add(teamMembers);
@@ -120,8 +134,8 @@ public class TeamDetailsView extends VerticalLayout {
         addTeamMemberButton.addClickListener(e-> this.addTeamMember());
         add(addTeamMemberButton);
 
-        addTextField(teamPhoneForm,"Active Phone", "xx-xx-xx");
-        addTextField(teamPhoneForm,"Backup Phone", "xx-xx-xx");
+        addTextField(teamPhoneForm,"Active Phone","activeMobile");
+        addTextField(teamPhoneForm,"Backup Phone","backupMobile");
         add(teamPhoneForm);
 
         add(supportMembers);
@@ -131,10 +145,10 @@ public class TeamDetailsView extends VerticalLayout {
         add(addSupportMember);
 
         emergencyContactForm.setResponsiveSteps(new FormLayout.ResponsiveStep("max-content",12));
-        addTextField(emergencyContactForm,"Emergency Contact Name" ,"Scott");
-        addTextField(emergencyContactForm,"Emergency Contact Email" ,"Scott@...");
-        addTextField(emergencyContactForm,"Emergency Contact Mobile" ,"111");
-        addTextField(emergencyContactForm,"Emergency Contact Landline" ,"222");
+        addTextField(emergencyContactForm,"Emergency Contact Name", "emergencyContactName" );
+        addTextField(emergencyContactForm,"Emergency Contact Email", "emergencyContactEmail" );
+        addTextField(emergencyContactForm,"Emergency Contact Mobile", "emergencyContactMobile");
+        addTextField(emergencyContactForm,"Emergency Contact Landline","emergencyContactLandline" );
 
         add(emergencyContactForm);
 
@@ -146,6 +160,7 @@ public class TeamDetailsView extends VerticalLayout {
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.add(saveForm,cancelForm);
         add(horizontalLayout);
+        binder.readBean(model);
 
     }
  }

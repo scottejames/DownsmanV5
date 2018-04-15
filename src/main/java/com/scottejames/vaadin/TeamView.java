@@ -76,6 +76,7 @@ public class TeamView extends VerticalLayout{
             editTeam.setEnabled(true);
             selectedTeam = event.getValue();
         });
+
     }
 
     private void deleteTeam(HasClickListeners.ClickEvent<Button> e) {
